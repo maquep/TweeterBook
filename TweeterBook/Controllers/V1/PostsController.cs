@@ -16,7 +16,7 @@ namespace TweeterBook.Controllers.V1
 
             for (int i = 0; i < 5; i++)
             {
-                _posts.Add(new Post { Id = Guid.NewGuid().ToString()});
+                _posts.Add(new Post { Id = Guid.NewGuid()});
             }
         }
 
