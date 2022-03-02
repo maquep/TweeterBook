@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TweeterBook.Installers;
 
 namespace TweeterBook
 {
@@ -26,14 +27,7 @@ namespace TweeterBook
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Serch for all classes implementing the IInstaller interface, create an instance of them and cast them into IInstaller
-            //This will essentially return MvcInstaller and DBInstaller
-            var installers = typeof(Startup).Assembly.ExportedTypes.Where(x => 
-                typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-                .Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
-
-            //Configure Services
-            installers.ForEach(installer => installer.InstallServices(services, Configuration));
+            services.InstallServicesInAssembly(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
