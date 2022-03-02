@@ -13,5 +13,9 @@ namespace TweeterBook.Services
         Post GetPostById(Guid Id);
 
         PostResponse CreatePost(PostRequest postRequest);
+
+        bool UpdatePost(Post post);
+
+        bool DeletePostById(Guid Id);
     }
 }

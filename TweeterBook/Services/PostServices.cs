@@ -17,24 +17,23 @@ namespace TweeterBook.Services
 
             for (int i = 0; i < 5; i++)
             {
-                _posts.Add(new Post { Id = Guid.NewGuid() });
+                _posts.Add(new Post { Id = Guid.NewGuid(), Title = $"Post {i}" });
             }
         }
 
         public PostResponse CreatePost(PostRequest postRequest)
         {
-            Guid postId;
-            if (!Guid.TryParse(postRequest.Id, out postId))
-            {
-                postId = Guid.NewGuid();
-            }
-
-            var post = new Post { Id = postId, Title = postRequest.Title };
+            var post = new Post { Id = postRequest.Id, Title = postRequest.Title };
             _posts.Add(post);
 
             var response = new PostResponse { Id = post.Id, Title = post.Title };
 
             return response;
+        }
+
+        public bool DeletePostById(Guid Id)
+        {
+            throw new NotImplementedException();
         }
 
         public Post GetPostById(Guid Id)
@@ -45,6 +44,17 @@ namespace TweeterBook.Services
         public List<Post> GetPosts()
         {
             return _posts;
+        }
+
+        public bool UpdatePost(Post postToUpdate)
+        {
+            if(GetPostById(postToUpdate.Id) == null)
+                return false;
+      
+            var postIndex = _posts.FindIndex(x => x.Id == postToUpdate.Id);
+            _posts[postIndex] = postToUpdate;
+
+            return true;
         }
     }
 }
