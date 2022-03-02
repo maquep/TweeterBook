@@ -1,50 +1,49 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TweeterBook.Contracts.V1;
 using TweeterBook.Contracts.V1.Requests;
 using TweeterBook.Contracts.V1.Responses;
 using TweeterBook.Domain;
+using TweeterBook.Services;
 
 namespace TweeterBook.Controllers.V1
 {
     public class PostsController : Controller
     {
-        private List<Post> _posts;
+        private IPostServices _postServices;
 
-        public PostsController()
+        public PostsController(IPostServices postServices)
         {
-            _posts = new List<Post>();
-
-            for (int i = 0; i < 5; i++)
-            {
-                _posts.Add(new Post { Id = Guid.NewGuid()});
-            }
+            _postServices = postServices;
         }
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public IActionResult GetAll()
         {
-            return Ok(_posts);
+            return Ok(_postServices.GetPosts());
+        }
+
+        [HttpGet(ApiRoutes.Posts.Get)]
+        public IActionResult Get([FromRoute] Guid postId)
+        {
+            var post = _postServices.GetPostById(postId);
+
+            if(post == null)
+                return NotFound();
+
+            return Ok(post);
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
         public IActionResult Create([FromBody] PostRequest postRequest)
         {
-            Guid postId;
-            if (!Guid.TryParse(postRequest.Id, out postId))
-            {
-                postId = new Guid();
-            }
-
-            Post post = new Post { Id = postId, Title = postRequest.Title };
-
-            _posts.Add(post);
+            var response = _postServices.CreatePost(postRequest);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + $"/{ApiRoutes.Posts.Get}";
 
-            var response = new PostResponse { Id = post.Id, Title = post.Title };
             return Created(locationUri, response);
         }
     }
