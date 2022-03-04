@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TweeterBook.Contracts.V1.Requests;
 using TweeterBook.Contracts.V1.Responses;
 using TweeterBook.Domain;
@@ -8,14 +9,14 @@ namespace TweeterBook.Services
 {
     public interface IPostServices
     {
-        List<Post> GetPosts();
+        Task<List<Post>> GetPostsAsync();
 
-        Post GetPostById(Guid Id);
+        Task<Post> GetPostByIdAsync(Guid Id);
 
-        PostResponse CreatePost(PostRequest postRequest);
+        Task<PostResponse> CreatePostAsync(PostRequest postRequest);
 
-        bool UpdatePost(Post post);
+        Task<bool> UpdatePostAsync(Post post);
 
-        bool DeletePostById(Guid Id);
+        Task<bool> DeletePostByIdAsync(Guid Id);
     }
 }

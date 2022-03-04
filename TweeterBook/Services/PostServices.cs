@@ -1,60 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TweeterBook.Contracts.V1.Requests;
 using TweeterBook.Contracts.V1.Responses;
+using TweeterBook.Data;
 using TweeterBook.Domain;
 
 namespace TweeterBook.Services
 {
     public class PostServices : IPostServices
     {
-        private List<Post> _posts;
+        private readonly DataContext _dataContext;
 
-        public PostServices()
+        public PostServices(DataContext dataContext)
         {
-            _posts = new List<Post>();
-
-            for (int i = 0; i < 5; i++)
-            {
-                _posts.Add(new Post { Id = Guid.NewGuid(), Title = $"Post {i}" });
-            }
+            _dataContext = dataContext;
         }
 
-        public PostResponse CreatePost(PostRequest postRequest)
+
+        public async Task<PostResponse> CreatePostAsync(PostRequest postRequest)
         {
-            var post = new Post { Id = postRequest.Id, Title = postRequest.Title };
-            _posts.Add(post);
+            
+            var post = new Post { Title = postRequest.Title };
+            await _dataContext.Posts.AddAsync(post);
+            var created = await _dataContext.SaveChangesAsync();
 
-            var response = new PostResponse { Id = post.Id, Title = post.Title };
+            var postResponse = new PostResponse { Id = post.Id, Title = post.Title };
 
-            return response;
+            return postResponse;
         }
 
-        public bool DeletePostById(Guid Id)
+        public async Task<bool> DeletePostByIdAsync(Guid Id)
         {
-            throw new NotImplementedException();
-        }
+            var post = GetPostByIdAsync(Id);
 
-        public Post GetPostById(Guid Id)
-        {
-            return _posts.SingleOrDefault(x => x.Id == Id);
-        }
-
-        public List<Post> GetPosts()
-        {
-            return _posts;
-        }
-
-        public bool UpdatePost(Post postToUpdate)
-        {
-            if(GetPostById(postToUpdate.Id) == null)
+            if (post == null)
                 return false;
-      
-            var postIndex = _posts.FindIndex(x => x.Id == postToUpdate.Id);
-            _posts[postIndex] = postToUpdate;
 
-            return true;
+           _dataContext.Remove(post);
+            var deleted = await _dataContext.SaveChangesAsync();
+
+            return deleted > 0;
+        }
+
+        public async Task<Post> GetPostByIdAsync(Guid Id)
+        {
+            return await _dataContext.Posts.SingleOrDefaultAsync(x => x.Id == Id);
+        }
+
+        public async Task<List<Post>> GetPostsAsync()
+        {
+            return await _dataContext.Posts.ToListAsync<Post>();
+        }
+
+        public async Task<bool> UpdatePostAsync(Post postToUpdate)
+        {
+             _dataContext.Posts.Update(postToUpdate);
+            var updated = await _dataContext.SaveChangesAsync();
+
+            return updated > 0;
         }
     }
 }
