@@ -19,7 +19,6 @@ namespace TweeterBook.Services
             _dataContext = dataContext;
         }
 
-
         public async Task<PostResponse> CreatePostAsync(PostRequest postRequest)
         {
             

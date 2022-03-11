@@ -7,18 +7,14 @@ namespace TweeterBook.Data
 {
     public class DataContext : IdentityDbContext //DbContext
     {
-        public DataContext()
-        {
-
-        }
-
+        public DbSet<Post> Posts { get; set; }
+        
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
 
         }
-
-        public DbSet<Post> Posts { get; set; }
+       
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
