@@ -19,10 +19,10 @@ namespace TweeterBook.Services
             _dataContext = dataContext;
         }
 
-        public async Task<PostResponse> CreatePostAsync(PostRequest postRequest)
+        public async Task<PostResponse> CreatePostAsync(Post post)
         {
             
-            var post = new Post { Title = postRequest.Title };
+            //var post = new Post { Title = postRequest.Title };
             await _dataContext.Posts.AddAsync(post);
             var created = await _dataContext.SaveChangesAsync();
 
@@ -61,5 +61,24 @@ namespace TweeterBook.Services
 
             return updated > 0;
         }
+
+
+        public async Task<bool> UserOwnsPostAsync(Guid postId, string userId)
+        {
+            var post = await _dataContext.Posts.AsNoTracking().SingleOrDefaultAsync(x => x.Id == postId);
+
+            if (post == null)
+            {
+                return false;
+            }
+
+            if (post.UserId != userId)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        
     }
 }

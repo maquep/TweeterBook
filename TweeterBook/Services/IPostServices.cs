@@ -13,10 +13,12 @@ namespace TweeterBook.Services
 
         Task<Post> GetPostByIdAsync(Guid Id);
 
-        Task<PostResponse> CreatePostAsync(PostRequest postRequest);
+        Task<PostResponse> CreatePostAsync(Post postRequest);
 
         Task<bool> UpdatePostAsync(Post post);
 
         Task<bool> DeletePostByIdAsync(Guid Id);
+
+        Task<bool> UserOwnsPostAsync(Guid postId, string userId);
     }
 }
