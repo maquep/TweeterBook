@@ -1,6 +1,11 @@
-﻿namespace TweeterBook.Services
+﻿using System.Threading.Tasks;
+using TweeterBook.Domain;
+
+namespace TweeterBook.Services
 {
-    public class IIdentityService
+    public interface IIdentityService
     {
+        Task<AuthenticationResult> RegisterAsync(string email, string password);
+        Task<AuthenticationResult> LoginAsync(string email, string password);
     }
 }

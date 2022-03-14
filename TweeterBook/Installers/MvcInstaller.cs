@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Text;
 using TweeterBook.Options;
@@ -19,13 +20,14 @@ namespace TweeterBook.Installers
             configuration.Bind(nameof(jwtSettings), jwtSettings);
             services.AddSingleton(jwtSettings);
 
-            services.AddControllers();
+            services.AddControllers();  
+            services.AddMvc();
             services.AddScoped<IIdentityService, IdentityService>();
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddAuthentication(x =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultAuthenticateScheme =JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
@@ -43,7 +45,6 @@ namespace TweeterBook.Installers
                 };
             });
 
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -57,7 +58,7 @@ namespace TweeterBook.Installers
                     { "Bearer", new string[0] }
                 };
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization in header",
                     Type = SecuritySchemeType.ApiKey,
@@ -67,22 +68,22 @@ namespace TweeterBook.Installers
                     Description = "Max's JWT Authorization header using bearer schema"
                 });
 
-                var openSecurityScheme = new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer"
-                    }
-                };
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                     {
-                        openSecurityScheme,
-                        new string[] {}
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new List<string>()
                     }
                 });
+
+                //c.OperationFilter<AuthenticationRequirementsOperationFilter>();
             });
         }
     }
