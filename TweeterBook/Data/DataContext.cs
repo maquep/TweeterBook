@@ -8,7 +8,7 @@ namespace TweeterBook.Data
     public class DataContext : IdentityDbContext //DbContext
     {
         public DbSet<Post> Posts { get; set; }
-        
+        public DbSet<RefreshToken> RefreshToken { get; set; }
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
