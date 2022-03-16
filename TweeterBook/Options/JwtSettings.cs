@@ -6,6 +6,6 @@ namespace TweeterBook.Options
     {
         public string Secret { get; set; }
 
-        public TimeSpan TokenLifetime { get; set; }
+        public TimeSpan TokenLifetime { get; set; } = TimeSpan.FromSeconds(45);
     }
 }
