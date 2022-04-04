@@ -16,9 +16,10 @@ namespace TweeterBook.Installers
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>();
 
-            services.AddScoped<IPostServices, PostServices>();
+            services.AddScoped<IPostService, PostService>();
 
             //var dbName = "TweeterBookSqlLite.db";
 

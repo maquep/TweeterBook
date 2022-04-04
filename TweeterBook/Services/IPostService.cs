@@ -7,7 +7,7 @@ using TweeterBook.Domain;
 
 namespace TweeterBook.Services
 {
-    public interface IPostServices
+    public interface IPostService
     {
         Task<List<Post>> GetPostsAsync();
 
@@ -16,6 +16,8 @@ namespace TweeterBook.Services
         Task<PostResponse> CreatePostAsync(Post postRequest);
 
         Task<bool> UpdatePostAsync(Post post);
+
+        Task<List<Tag>> GetAllTagsAsync();
 
         Task<bool> DeletePostByIdAsync(Guid Id);
 

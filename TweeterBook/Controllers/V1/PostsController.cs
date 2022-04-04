@@ -16,9 +16,9 @@ namespace TweeterBook.Controllers.V1
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PostsController : Controller
     {
-        private IPostServices _postServices;
+        private IPostService _postServices;
 
-        public PostsController(IPostServices postServices)
+        public PostsController(IPostService postServices)
         {
             _postServices = postServices;
         }

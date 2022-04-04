@@ -51,11 +51,14 @@ namespace TweeterBook.Installers
             });
 
             //Register tokenValidationParams as a value accessible from anywhere
-          
+
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("TagViewer", builder => builder.RequireClaim("tags.view", "true"));
+                options.AddPolicy("TagViewer", builder =>
+                {
+                    builder.RequireClaim("tags.view", "true");
+                });
             });
 
             services.AddSwaggerGen(x =>

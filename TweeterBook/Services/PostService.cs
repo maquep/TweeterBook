@@ -10,19 +10,17 @@ using TweeterBook.Domain;
 
 namespace TweeterBook.Services
 {
-    public class PostServices : IPostServices
+    public class PostService : IPostService
     {
         private readonly DataContext _dataContext;
 
-        public PostServices(DataContext dataContext)
+        public PostService(DataContext dataContext)
         {
             _dataContext = dataContext;
         }
 
         public async Task<PostResponse> CreatePostAsync(Post post)
         {
-            
-            //var post = new Post { Title = postRequest.Title };
             await _dataContext.Posts.AddAsync(post);
             var created = await _dataContext.SaveChangesAsync();
 
@@ -38,7 +36,7 @@ namespace TweeterBook.Services
             if (post == null)
                 return false;
 
-           _dataContext.Remove(post);
+            _dataContext.Remove(post);
             var deleted = await _dataContext.SaveChangesAsync();
 
             return deleted > 0;
@@ -56,12 +54,11 @@ namespace TweeterBook.Services
 
         public async Task<bool> UpdatePostAsync(Post postToUpdate)
         {
-             _dataContext.Posts.Update(postToUpdate);
+            _dataContext.Posts.Update(postToUpdate);
             var updated = await _dataContext.SaveChangesAsync();
 
             return updated > 0;
         }
-
 
         public async Task<bool> UserOwnsPostAsync(Guid postId, string userId)
         {
@@ -79,6 +76,25 @@ namespace TweeterBook.Services
 
             return true;
         }
-        
+
+        public async Task<List<Tag>> GetAllTagsAsync()
+        {
+            return await _dataContext.Tags.AsNoTracking().ToListAsync();
+        }
+
+        private async Task AddNewTagsAsync(Post post)
+        {
+            foreach (var tag in post.Tags)
+            {
+                var existingTag =
+                    await _dataContext.Tags.SingleOrDefaultAsync(x =>
+                        x.Name == tag.Name);
+                if (existingTag != null)
+                    continue;
+
+                await _dataContext.Tags.AddAsync(new Tag
+                { Name = tag.Name, CreatedOn = DateTime.UtcNow, CreatorId = post.UserId });
+            }
+        }
     }
 }

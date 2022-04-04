@@ -73,13 +73,18 @@ namespace TweeterBook.Services
                 };
             }
 
+            var newUserId = Guid.NewGuid();
             var newUser = new IdentityUser
             {
+                Id = newUserId.ToString(),
                 Email = email,
                 UserName = email
             };
 
             var createUser = await _userManager.CreateAsync(newUser, password);
+            
+            //Add claim for created user
+            await _userManager.AddClaimAsync(newUser, new Claim("tags.view", "true"));
 
             if (!createUser.Succeeded)
             {
@@ -190,6 +195,7 @@ namespace TweeterBook.Services
                 new Claim("id", user.Id)
             };
 
+            //Load all claims for this user and add them into subject of token descriptor
             var userClaims = await _userManager.GetClaimsAsync(user);
             claims.AddRange(userClaims);
 
