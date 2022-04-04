@@ -18,7 +18,7 @@ namespace TweeterBook.Services
             _dataContext = dataContext;
         }
 
-        public async Task<PostResponse> CreatePostAsync(PostRequest postRequest)
+        public async Task<PostResponse> CreatePostAsync(CreatePostRequest postRequest)
         {
             var cosmosPost = new CosmosPost
             {

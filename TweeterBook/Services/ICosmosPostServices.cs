@@ -13,7 +13,7 @@ namespace TweeterBook.Services
 
         Task<CosmosPost> GetPostByIdAsync(Guid Id);
 
-        Task<PostResponse> CreatePostAsync(PostRequest postRequest);
+        Task<PostResponse> CreatePostAsync(CreatePostRequest postRequest);
 
         Task<bool> UpdatePostAsync(CosmosPost post);
 

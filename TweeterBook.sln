@@ -3,7 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweeterBook", "TweeterBook\TweeterBook.csproj", "{BFBB015F-E5CD-4082-9D01-2C722A9B58F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TweeterBook", "TweeterBook\TweeterBook.csproj", "{BFBB015F-E5CD-4082-9D01-2C722A9B58F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A3D0D11D-C4C4-4565-A7A6-4C39F7D90B4B}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweeterBook.IntegrationTests", "TweeterBook.IntegrationTests\TweeterBook.IntegrationTests.csproj", "{F66FF529-88FE-41CB-83D6-961C7947CCD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +22,10 @@ Global
 		{BFBB015F-E5CD-4082-9D01-2C722A9B58F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFBB015F-E5CD-4082-9D01-2C722A9B58F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFBB015F-E5CD-4082-9D01-2C722A9B58F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F66FF529-88FE-41CB-83D6-961C7947CCD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F66FF529-88FE-41CB-83D6-961C7947CCD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F66FF529-88FE-41CB-83D6-961C7947CCD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F66FF529-88FE-41CB-83D6-961C7947CCD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

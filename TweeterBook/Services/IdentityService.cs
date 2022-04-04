@@ -54,7 +54,17 @@ namespace TweeterBook.Services
 
         public async Task<AuthenticationResult> RegisterAsync(string email, string password)
         {
-            var existingUser = await _userManager.FindByEmailAsync(email);
+            var existingUser = new IdentityUser();
+            try
+            {
+                existingUser = await _userManager.FindByEmailAsync(email);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
             if (existingUser != null)
             {
                 return new AuthenticationResult

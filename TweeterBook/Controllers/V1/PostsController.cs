@@ -41,7 +41,7 @@ namespace TweeterBook.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
-        public async Task<IActionResult> Create([FromBody] PostRequest postRequest)
+        public async Task<IActionResult> Create([FromBody] CreatePostRequest postRequest)
         {
             var post = new Post
             {

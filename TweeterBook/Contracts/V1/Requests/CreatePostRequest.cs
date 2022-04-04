@@ -2,7 +2,7 @@
 
 namespace TweeterBook.Contracts.V1.Requests
 {
-    public class PostRequest
+    public class CreatePostRequest
     {
         public string Title { get; set; }
     }

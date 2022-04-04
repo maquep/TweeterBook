@@ -35,7 +35,7 @@ namespace TweeterBook.Controllers.V1
         }
 
         [HttpPost(ApiRoutes.CosmosPosts.Create)]
-        public async Task<IActionResult> Create([FromBody] PostRequest postRequest)
+        public async Task<IActionResult> Create([FromBody] CreatePostRequest postRequest)
         {
             var response = await _postServices.CreatePostAsync(postRequest);
 
