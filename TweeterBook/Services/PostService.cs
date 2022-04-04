@@ -127,9 +127,7 @@ namespace TweeterBook.Services
 
             var tagResponse = new TagResponse
             {
-                Name = newTag.Name,
-                CreatedOn = newTag.CreatedOn,
-                CreatedBy = newTag.CreatedBy
+                Name = newTag.Name
             };
 
             return tagResponse;

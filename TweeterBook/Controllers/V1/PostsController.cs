@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TweeterBook.Contracts.V1;
@@ -17,16 +19,19 @@ namespace TweeterBook.Controllers.V1
     public class PostsController : Controller
     {
         private IPostService _postServices;
+        private IMapper _mapper;
 
-        public PostsController(IPostService postServices)
+        public PostsController(IPostService postServices, IMapper mapper)
         {
             _postServices = postServices;
+            _mapper = mapper;
         }
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _postServices.GetPostsAsync());
+            var posts = await _postServices.GetPostsAsync();
+            return Ok(_mapper.Map<List<PostResponse>>(posts));
         }
 
         [HttpGet(ApiRoutes.Posts.Get)]
@@ -37,7 +42,7 @@ namespace TweeterBook.Controllers.V1
             if(post == null)
                 return NotFound();
 
-            return Ok(post);
+            return Ok(_mapper.Map<PostResponse>(post));
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
@@ -49,12 +54,12 @@ namespace TweeterBook.Controllers.V1
                 UserId = HttpContext.GetUserId()
             };
 
-            var response = await _postServices.CreatePostAsync(post);
+            await _postServices.CreatePostAsync(post);
 
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + $"/{ApiRoutes.Posts.Get}";
 
-            return Created(locationUri, response);
+            return Created(locationUri, _mapper.Map<PostResponse>(post));
         }
 
         [HttpPut(ApiRoutes.Posts.Update)]
@@ -71,8 +76,10 @@ namespace TweeterBook.Controllers.V1
             post.Title = updatePostRequest.Title;
             var updated = await _postServices.UpdatePostAsync(post);
 
-            if(updated)
-                return Ok(post);
+            if (updated)
+            {
+                return Ok(_mapper.Map<PostResponse>(post));
+            }
 
             return NotFound();
         }
