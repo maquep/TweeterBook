@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Text;
+using TweeterBook.Authorization;
 using TweeterBook.Options;
 using TweeterBook.Services;
 
@@ -52,14 +54,25 @@ namespace TweeterBook.Installers
 
             //Register tokenValidationParams as a value accessible from anywhere
 
+            //Adding Tags
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("TagViewer", builder => 
+            //    {
+            //        builder.RequireClaim("tags.view", "true");
+            //    });
+            //});
 
+            //Add Auth Handler
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("TagViewer", builder =>
+                options.AddPolicy("MustWorkForMax", policy =>
                 {
-                    builder.RequireClaim("tags.view", "true");
+                    policy.AddRequirements(new WorkForCompanyRequirement("gmail.com"));
                 });
             });
+
+            services.AddSingleton<IAuthorizationHandler, WorksForCompanyHandler>();
 
             services.AddSwaggerGen(x =>
             {

@@ -35,9 +35,9 @@
         {
             public const string GetAll = Base + "/tags";
             public const string Create = Base + "/tags";
-            public const string Get = Base + " /tags/{tagId}";
-            public const string Update = Base + "/tags/{tagId}";
-            public const string Delete = Base + "/tags/{tagId}";
+            public const string Get = Base + " /tags/{tagName}";
+            public const string Update = Base + "/tags/{tagName}";
+            public const string Delete = Base + "/tags/{tagName}";
         }
     }
 }

@@ -10,7 +10,7 @@ using TweeterBook.Services;
 
 namespace TweeterBook.Controllers.V1
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin,Editor")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TagsController : Controller
     {
         private readonly IPostService _postService;
@@ -21,14 +21,12 @@ namespace TweeterBook.Controllers.V1
         }
 
         [HttpGet(ApiRoutes.Tags.GetAll)]
-        [Authorize(Roles = "Admin, Editor")]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _postService.GetAllTagsAsync());
         }
 
-        [HttpGet(ApiRoutes.Tags.Create)]
-        [Authorize(Roles = "Admin, Editor")]
+        [HttpPost(ApiRoutes.Tags.Create)]
         public async Task<IActionResult> Create([FromBody] CreateTagRequest tagRequest)
         {
             var newTag = new Tag
@@ -46,8 +44,8 @@ namespace TweeterBook.Controllers.V1
             return Created(locationUri, response);
         }
 
-        [HttpGet(ApiRoutes.Tags.Delete)]
-        [Authorize(Roles = "Admin")]
+        [HttpDelete(ApiRoutes.Tags.Delete)]
+        //[Authorize(Policy = "MustWorkForMax")]
         public async Task<IActionResult> Delete([FromRoute] string tagName)
         {
             var deleted = await _postService.DeleteTagAsync(tagName);
