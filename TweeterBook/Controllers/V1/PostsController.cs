@@ -51,7 +51,8 @@ namespace TweeterBook.Controllers.V1
             var post = new Post
             {
                 Title = postRequest.Title,
-                UserId = HttpContext.GetUserId()
+                UserId = HttpContext.GetUserId(),
+                Tags = postRequest.Tags.Select(t => new PostTag { TagName = t.Name }).ToList(),
             };
 
             await _postServices.CreatePostAsync(post);

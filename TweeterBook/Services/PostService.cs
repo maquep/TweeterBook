@@ -21,7 +21,7 @@ namespace TweeterBook.Services
 
         public async Task<PostResponse> CreatePostAsync(Post post)
         {
-            post.Tags?.ForEach(x => x.Name = x.Name.ToLower());
+            post.Tags?.ForEach(x => x.TagName = x.TagName.ToLower());
             await AddNewTagsAsync(post);
 
             await _dataContext.Posts.AddAsync(post);
@@ -91,12 +91,12 @@ namespace TweeterBook.Services
             {
                 var existingTag =
                     await _dataContext.Tags.SingleOrDefaultAsync(x =>
-                        x.Name == tag.Name);
+                        x.Name == tag.TagName);
                 if (existingTag != null)
                     continue;
 
                 await _dataContext.Tags.AddAsync(new Tag
-                { Name = tag.Name, CreatedOn = DateTime.UtcNow, CreatorId = post.UserId });
+                { Name = tag.TagName, CreatedOn = DateTime.UtcNow, CreatorId = post.UserId });
             }
         }
         public async Task<Tag> GetTagByNameAsync(string tagName)

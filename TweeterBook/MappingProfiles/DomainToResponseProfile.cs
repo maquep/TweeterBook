@@ -11,7 +11,7 @@ namespace TweeterBook.MappingProfiles
         {
             CreateMap<Post, PostResponse>()
                 .ForMember(dest => dest.Tags, opt =>
-                opt.MapFrom(src => src.Tags.Select(x => new TagResponse { Name = x.Name })));
+                opt.MapFrom(src => src.Tags.Select(x => new TagResponse { Name = x.TagName })));
 
             CreateMap<Tag, TagResponse>();
         }
