@@ -34,19 +34,19 @@ namespace TweeterBook
 
                 var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-                //if (!await roleManager.RoleExistsAsync("Admin"))
-                //{
-                //    var adminRole = new IdentityRole("Admin");
+                if (!await roleManager.RoleExistsAsync("Admin"))
+                {
+                    var adminRole = new IdentityRole("Admin");
 
-                //    await roleManager.CreateAsync(adminRole);
-                //}
+                    await roleManager.CreateAsync(adminRole);
+                }
 
-                //if (!await roleManager.RoleExistsAsync("Editor"))
-                //{
-                //    var editRole = new IdentityRole("Editor");
+                if (!await roleManager.RoleExistsAsync("Editor"))
+                {
+                    var editRole = new IdentityRole("Editor");
 
-                //    await roleManager.CreateAsync(editRole);
-                //}
+                    await roleManager.CreateAsync(editRole);
+                }
             }
 
             await host.RunAsync();
