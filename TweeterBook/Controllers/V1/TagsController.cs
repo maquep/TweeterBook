@@ -35,6 +35,10 @@ namespace TweeterBook.Controllers.V1
         [HttpPost(ApiRoutes.Tags.Create)]
         public async Task<IActionResult> Create([FromBody] CreateTagRequest tagRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                
+            }
             var newTag = new Tag
             {
                 Name = tagRequest.Name,
