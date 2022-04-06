@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TweeterBook.Cache;
 using TweeterBook.Contracts.V1;
 using TweeterBook.Contracts.V1.Requests;
 using TweeterBook.Contracts.V1.Responses;
@@ -28,6 +29,7 @@ namespace TweeterBook.Controllers.V1
         }
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
+        [Cache(600)]
         public async Task<IActionResult> GetAll()
         {
             var posts = await _postServices.GetPostsAsync();

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using TweeterBook.Domain;
 
 namespace TweeterBook.Contracts.V1.Requests
 {
