@@ -33,7 +33,7 @@ namespace TweeterBook.Controllers.V1
         public async Task<IActionResult> GetAll()
         {
             var posts = await _postServices.GetPostsAsync();
-            return Ok(_mapper.Map<List<PostResponse>>(posts));
+            return Ok(new PagedResponse<PostResponse>(_mapper.Map<List<PostResponse>>(posts)));
         }
 
         [HttpGet(ApiRoutes.Posts.Get)]
@@ -44,7 +44,7 @@ namespace TweeterBook.Controllers.V1
             if(post == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<PostResponse>(post));
+            return Ok(new Response<PostResponse>(_mapper.Map<PostResponse>(post)));
         }
 
         [HttpPost(ApiRoutes.Posts.Create)]
@@ -62,7 +62,7 @@ namespace TweeterBook.Controllers.V1
             var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
             var locationUri = baseUrl + $"/{ApiRoutes.Posts.Get}";
 
-            return Created(locationUri, _mapper.Map<PostResponse>(post));
+            return Created(locationUri, new Response<PostResponse>(_mapper.Map<PostResponse>(post)));
         }
 
         [HttpPut(ApiRoutes.Posts.Update)]
@@ -81,7 +81,7 @@ namespace TweeterBook.Controllers.V1
 
             if (updated)
             {
-                return Ok(_mapper.Map<PostResponse>(post));
+                return Ok(new Response<PostResponse>(_mapper.Map<PostResponse>(post)));
             }
 
             return NotFound();

@@ -53,7 +53,9 @@
     <Compile Include="V1\Responses\AuthSuccessResponse.cs" />
     <Compile Include="V1\Responses\ErrorModel.cs" />
     <Compile Include="V1\Responses\ErrorResponse.cs" />
+    <Compile Include="V1\Responses\PagedResponse.cs" />
     <Compile Include="V1\Responses\PostResponse.cs" />
+    <Compile Include="V1\Responses\Response.cs" />
     <Compile Include="V1\Responses\TagResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
