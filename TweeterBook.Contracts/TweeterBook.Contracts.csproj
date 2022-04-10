@@ -45,6 +45,7 @@
     <Compile Include="V1\ApiRoutes.cs" />
     <Compile Include="V1\Requests\CreatePostRequest.cs" />
     <Compile Include="V1\Requests\CreateTagRequest.cs" />
+    <Compile Include="V1\Requests\Queries\PaginationQuery.cs" />
     <Compile Include="V1\Requests\RefreshTokenRequest.cs" />
     <Compile Include="V1\Requests\UpdatePostRequest.cs" />
     <Compile Include="V1\Requests\UserLoginRequest.cs" />

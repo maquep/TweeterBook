@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 using TweeterBook.Cache;
 using TweeterBook.Contracts.V1;
 using TweeterBook.Contracts.V1.Requests;
+using TweeterBook.Contracts.V1.Requests.Queries;
 using TweeterBook.Contracts.V1.Responses;
 using TweeterBook.Domain;
 using TweeterBook.Extensions;
+using TweeterBook.Helpers;
 using TweeterBook.Services;
 
 namespace TweeterBook.Controllers.V1
@@ -21,19 +23,32 @@ namespace TweeterBook.Controllers.V1
     {
         private IPostService _postServices;
         private IMapper _mapper;
+        private readonly IUriService _uriService;
 
-        public PostsController(IPostService postServices, IMapper mapper)
+        public PostsController(IPostService postServices, IMapper mapper, IUriService uriService)
         {
             _postServices = postServices;
             _mapper = mapper;
+            _uriService = uriService;
         }
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
         [Cache(600)]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PaginationQuery paginationQuery)
         {
-            var posts = await _postServices.GetPostsAsync();
-            return Ok(new PagedResponse<PostResponse>(_mapper.Map<List<PostResponse>>(posts)));
+            var paginationFilter = _mapper.Map<PaginationFilter>(paginationQuery);
+
+            var posts = await _postServices.GetPostsAsync(paginationFilter);
+
+            var postResonpse = _mapper.Map<List<PostResponse>>(posts);
+
+            if (paginationFilter == null || paginationFilter.PageNumber < 1 || paginationFilter.PageSize < 1)
+            {
+                return Ok(new PagedResponse<PostResponse>(postResonpse));
+            }
+
+            var paginationResponse = PaginationHelpers.CreatePaginationResponse<PostResponse>(_uriService, paginationFilter, postResonpse);
+            return Ok(paginationResponse);
         }
 
         [HttpGet(ApiRoutes.Posts.Get)]
@@ -59,8 +74,7 @@ namespace TweeterBook.Controllers.V1
 
             await _postServices.CreatePostAsync(post);
 
-            var baseUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.ToUriComponent()}";
-            var locationUri = baseUrl + $"/{ApiRoutes.Posts.Get}";
+            var locationUri = _uriService.GetPostUri(post.Id.ToString());
 
             return Created(locationUri, new Response<PostResponse>(_mapper.Map<PostResponse>(post)));
         }

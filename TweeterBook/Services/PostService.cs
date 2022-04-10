@@ -50,9 +50,17 @@ namespace TweeterBook.Services
             return await _dataContext.Posts.SingleOrDefaultAsync(x => x.Id == Id);
         }
 
-        public async Task<List<Post>> GetPostsAsync()
+        public async Task<List<Post>> GetPostsAsync(PaginationFilter paginationFilter = null)
         {
-            return await _dataContext.Posts.ToListAsync<Post>();
+            if (paginationFilter == null)
+            {
+                return await _dataContext.Posts.ToListAsync<Post>();
+            }
+            var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
+            return await _dataContext.Posts.Include(x => x.Tags)
+                .Skip(skip)
+                .Take(paginationFilter.PageSize)
+                .ToListAsync<Post>();
         }
 
         public async Task<bool> UpdatePostAsync(Post postToUpdate)

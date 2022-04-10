@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TweeterBook.Contracts.V1.Requests;
 using TweeterBook.Contracts.V1.Responses;
 using TweeterBook.Domain;
 
@@ -9,7 +8,7 @@ namespace TweeterBook.Services
 {
     public interface IPostService
     {
-        Task<List<Post>> GetPostsAsync();
+        Task<List<Post>> GetPostsAsync(PaginationFilter paginationFilter = null);
 
         Task<Post> GetPostByIdAsync(Guid Id);
 
