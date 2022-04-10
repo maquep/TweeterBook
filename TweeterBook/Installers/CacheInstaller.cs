@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 using TweeterBook.Cache;
 using TweeterBook.Services;
 
@@ -17,6 +18,9 @@ namespace TweeterBook.Installers
             {
                 return;
             }
+
+            services.AddSingleton<IConnectionMultiplexer>(_ => 
+            ConnectionMultiplexer.Connect(redisCacheSettings.ConnectionString));
 
             services.AddStackExchangeRedisCache(options => options.Configuration = redisCacheSettings.ConnectionString);
             services.AddSingleton<IResponseCacheService, ResponseCacheService>();

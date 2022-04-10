@@ -41,7 +41,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="HealthChecks\" />
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 </Project>
