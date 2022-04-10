@@ -34,11 +34,11 @@ namespace TweeterBook.Controllers.V1
 
         [HttpGet(ApiRoutes.Posts.GetAll)]
         [Cache(600)]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationQuery paginationQuery)
+        public async Task<IActionResult> GetAll([FromQuery] string userId, [FromQuery] PaginationQuery paginationQuery)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(paginationQuery);
 
-            var posts = await _postServices.GetPostsAsync(paginationFilter);
+            var posts = await _postServices.GetPostsAsync(userId, paginationFilter);
 
             var postResonpse = _mapper.Map<List<PostResponse>>(posts);
 

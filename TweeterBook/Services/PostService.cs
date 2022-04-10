@@ -50,14 +50,29 @@ namespace TweeterBook.Services
             return await _dataContext.Posts.SingleOrDefaultAsync(x => x.Id == Id);
         }
 
-        public async Task<List<Post>> GetPostsAsync(PaginationFilter paginationFilter = null)
+        /// <summary>
+        /// Get all Posts for all users if userid id null
+        /// Get all posts for specific user if userid is not null
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="paginationFilter"></param>
+        /// <returns></returns>
+        public async Task<List<Post>> GetPostsAsync(string userId = null, PaginationFilter paginationFilter = null)
         {
+            var queryable = _dataContext.Posts.AsQueryable();
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                queryable = queryable.Where(x => x.UserId == userId);
+            }
+
             if (paginationFilter == null)
             {
-                return await _dataContext.Posts.ToListAsync<Post>();
+                return await queryable.Include(x => x.Tags).ToListAsync();
             }
+
             var skip = (paginationFilter.PageNumber - 1) * paginationFilter.PageSize;
-            return await _dataContext.Posts.Include(x => x.Tags)
+            return await queryable.Include(x => x.Tags)
                 .Skip(skip)
                 .Take(paginationFilter.PageSize)
                 .ToListAsync<Post>();
