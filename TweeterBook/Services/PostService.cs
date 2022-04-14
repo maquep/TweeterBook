@@ -57,14 +57,11 @@ namespace TweeterBook.Services
         /// <param name="userId"></param>
         /// <param name="paginationFilter"></param>
         /// <returns></returns>
-        public async Task<List<Post>> GetPostsAsync(string userId = null, PaginationFilter paginationFilter = null)
+        public async Task<List<Post>> GetPostsAsync(GetAllPostsFilter filter = null, PaginationFilter paginationFilter = null)
         {
             var queryable = _dataContext.Posts.AsQueryable();
 
-            if (!string.IsNullOrEmpty(userId))
-            {
-                queryable = queryable.Where(x => x.UserId == userId);
-            }
+            queryable = AddFilterOnQuery(filter, queryable);
 
             if (paginationFilter == null)
             {
@@ -108,20 +105,6 @@ namespace TweeterBook.Services
             return await _dataContext.Tags.AsNoTracking().ToListAsync();
         }
 
-        private async Task AddNewTagsAsync(Post post)
-        {
-            foreach (var tag in post.Tags)
-            {
-                var existingTag =
-                    await _dataContext.Tags.SingleOrDefaultAsync(x =>
-                        x.Name == tag.TagName);
-                if (existingTag != null)
-                    continue;
-
-                await _dataContext.Tags.AddAsync(new Tag
-                { Name = tag.TagName, CreatedOn = DateTime.UtcNow, CreatorId = post.UserId });
-            }
-        }
         public async Task<Tag> GetTagByNameAsync(string tagName)
         {
             return await _dataContext.Tags.SingleOrDefaultAsync(x => x.Name == tagName);
@@ -154,6 +137,31 @@ namespace TweeterBook.Services
             };
 
             return tagResponse;
+        }
+
+        private async Task AddNewTagsAsync(Post post)
+        {
+            foreach (var tag in post.Tags)
+            {
+                var existingTag =
+                    await _dataContext.Tags.SingleOrDefaultAsync(x =>
+                        x.Name == tag.TagName);
+                if (existingTag != null)
+                    continue;
+
+                await _dataContext.Tags.AddAsync(new Tag
+                { Name = tag.TagName, CreatedOn = DateTime.UtcNow, CreatorId = post.UserId });
+            }
+        }
+
+        private static IQueryable<Post> AddFilterOnQuery(GetAllPostsFilter filter, IQueryable<Post> queryable)
+        {
+            if (!string.IsNullOrEmpty(filter?.UserId))
+            {
+                queryable = queryable.Where(x => x.UserId == filter.UserId);
+            }
+
+            return queryable;
         }
     }
 }
